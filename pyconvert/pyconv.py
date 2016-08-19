@@ -309,8 +309,12 @@ def convertJSON2OBJ(cls, json_doc):
 	else:
 		for key in json_doc.keys():
 			value = json_doc[key]
+			if value is None:
+				continue
 			if not isinstance(value,list) and not isinstance(value,dict):
-				type_conv = type(value)
+				type_conv = hasattr(cls, key) and getattr(cls, key) or None
+				if type_conv is None:
+					continue
 				attrs[key] = type_conv(value)
 			elif isinstance(value,dict) and not isinstance(cls.__dict__[key],list):
 				attrs[key] = convertJSON2OBJ(cls.__dict__[key],value)
