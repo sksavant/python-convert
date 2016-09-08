@@ -17,7 +17,7 @@
 # -*- coding: utf-8 -*-
 
 import inspect
-import simplejson as json
+import json
 from xml.dom.minidom import parseString
 
 import sys
@@ -309,22 +309,17 @@ def convertJSON2OBJ(cls, json_doc):
 	else:
 		for key in json_doc.keys():
 			value = json_doc[key]
-                        print('Before', cls, key, value)
 			if not isinstance(value,list) and not isinstance(value,dict):
 				type_conv = type(value)
 				attrs[key] = type_conv(value)
 			elif isinstance(value,dict) and not isinstance(cls.__dict__[key],list):
-                                print('PC', cls, value, key)
 				attrs[key] = convertJSON2OBJ(cls.__dict__[key],value)
-                                print('over')
 			else:
 				l = []
 				for a in value:
 					b = convertJSON2OBJ(cls.__dict__[key][0], a)
 					l.append(b)
 				attrs[key] = l
-                print('After for')
-                print(cls, attrs)
 		c = cls()
                 if isinstance(c, dict):
                     c = attrs
